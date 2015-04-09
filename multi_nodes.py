@@ -28,6 +28,9 @@ import base64
 from Crypto.Cipher import AES
 import re
 
+__author__ = "Alex Balzer"
+__version__ = "0.1.0"
+
 def generate_json_file():
 	# generates a base image for the json file
 	pass
@@ -65,8 +68,11 @@ def encrypt(data):
 	cipher = AES.new(secret)
 	encoded = EncodeAES(cipher, data)
 	print 'Encrypted String:',encoded
-	return encoded
+	w = open('secret_key.x15','w')
+	w.write(secret)
+	return encoded , secret
 
+# TODO: create a file that can be used as your decryption method.
 def decrypt(data,key='not_random'):
 	PADDING = '{'
 	DecodeAES = lambda c, e: c.decrypt(base64.b64decode(e)).rstrip(PADDING)
@@ -92,6 +98,10 @@ if __name__ == "__main__":
 			# search_dir()
 		else:
 			print node, json_file[node]['uname'] , json_file[node]['passwd']
+			# decrypt the password
+			key = raw_input("please enter in the file to decrypt your password:\n")
+			print 'length of the key = ',len(key)
+			json_file[node]['passwd'] = decrypt( json_file[node]['passwd'], key )
 			ssh = connect_to_server(node, json_file[node]['uname'] , json_file[node]['passwd'])
 			i,o,e = ssh.exec_command('ls -la')
 			print o.read()

@@ -1,3 +1,7 @@
 *.pem
 *.pyc
 *.json
+*.x15
+*.swp
+.trash/*
+vagrant/*
