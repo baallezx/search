@@ -70,6 +70,7 @@ def encrypt(data):
 	print 'Encrypted String:',encoded
 	w = open('secret_key.x15','w')
 	w.write(secret)
+	print "secret key length = ", len(secret)
 	return encoded , secret
 
 # TODO: create a file that can be used as your decryption method.
@@ -91,6 +92,7 @@ if __name__ == "__main__":
 	import sys
 	l = sys.argv[1:] # list of all the nodes to connect to
 	json_file = json.loads( open(l[0],'r').read() )
+	# TODO: create an exception that will handle bad json nodes, that for one reason or another are not working.
 	for node in json_file.iterkeys():
 		if 'pkey' in node: # you have a node that uses a key to connect
 			pass
@@ -100,8 +102,12 @@ if __name__ == "__main__":
 			print node, json_file[node]['uname'] , json_file[node]['passwd']
 			# decrypt the password
 			key = raw_input("please enter in the file to decrypt your password:\n")
-			print 'length of the key = ',len(key)
-			json_file[node]['passwd'] = decrypt( json_file[node]['passwd'], key )
+			try:
+				key_file = open(key,'r').read()
+			except:
+				key_file = None
+			print 'length of the key = ',len(key_file), '\nkey = ',key_file
+			json_file[node]['passwd'] = decrypt( json_file[node]['passwd'] , key_file )
 			ssh = connect_to_server(node, json_file[node]['uname'] , json_file[node]['passwd'])
 			i,o,e = ssh.exec_command('ls -la')
 			print o.read()
