@@ -1,0 +1,4 @@
+alex-mbp:ssh_machine abalzer$ ruby ssh.rb
+You
+ssh.rb:105:in `unencrypt_file': Exception (Exception)
+	from ssh.rb:125:in `<main>'
